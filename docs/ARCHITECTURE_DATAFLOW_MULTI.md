@@ -184,6 +184,7 @@ Returns: [
 ```
 
 **Request Example**:
+
 ```json
 {
   "query": "camping equipment",
@@ -196,6 +197,7 @@ Returns: [
 ```
 
 **Response Example**:
+
 ```json
 {
   "products": [
@@ -243,6 +245,7 @@ Returns: [
 ```
 
 **Customer Info Request**:
+
 ```json
 {
   "customerId": "user123"
@@ -250,6 +253,7 @@ Returns: [
 ```
 
 **Customer Info Response**:
+
 ```json
 {
   "id": "user123",
@@ -263,6 +267,7 @@ Returns: [
 ```
 
 **Matchmaking Request**:
+
 ```json
 {
   "products": [1, 2, 3, 4, 5],
@@ -275,6 +280,7 @@ Returns: [
 ```
 
 **Matchmaking Response**:
+
 ```json
 {
   "rankedProducts": [
@@ -325,6 +331,7 @@ Returns: {
 ```
 
 **Location Request**:
+
 ```json
 {
   "productIds": [1, 2, 3]
@@ -332,6 +339,7 @@ Returns: {
 ```
 
 **Location Response**:
+
 ```json
 {
   "locations": [
@@ -343,6 +351,7 @@ Returns: {
 ```
 
 **Navigation Request**:
+
 ```json
 {
   "startLocation": "entrance",
@@ -356,6 +365,7 @@ Returns: {
 ```
 
 **Navigation Response**:
+
 ```json
 {
   "route": {
@@ -427,6 +437,7 @@ return finalResponse;
 ```
 
 **Final Response to Store**:
+
 ```json
 {
   "products": [
@@ -683,18 +694,21 @@ sequenceDiagram
 ## Performance Characteristics
 
 ### MAF Local Mode
+
 - **Latency**: 5-10 seconds (3 sequential agents)
 - **Dependencies**: Azure OpenAI, SQL Database
 - **Agent Creation**: Dynamic (created per request)
 - **Cost**: Token usage for 3 agents + embeddings
 
 ### MAF Foundry Mode
+
 - **Latency**: 6-12 seconds (includes Foundry overhead)
 - **Dependencies**: Microsoft Foundry, SQL Database
 - **Agent Management**: Centralized in Foundry
 - **Cost**: Foundry agent execution + token costs
 
 ### Direct Call Mode
+
 - **Latency**: < 200ms (no AI processing)
 - **Dependencies**: None
 - **Agent Simulation**: Predefined responses
@@ -703,6 +717,7 @@ sequenceDiagram
 ## Agent Coordination Patterns
 
 ### Sequential Execution
+
 ```
 Agent 1 (ProductSearch)
     ↓ (waits for completion)
@@ -712,12 +727,14 @@ Agent 3 (Navigation) - uses Agent 2 results
 ```
 
 ### Benefits of Sequential Pattern
+
 1. **Clear Dependencies**: Each agent builds on previous results
 2. **Simplified Error Handling**: Fail fast if early agent fails
 3. **Predictable Flow**: Easy to understand and debug
 4. **Resource Efficiency**: No parallel processing overhead
 
 ### Alternative: Parallel Execution (Future)
+
 ```
 Agent 1 (ProductSearch) ──┐
                           ├─→ Aggregate
@@ -729,6 +746,7 @@ Agent 2 (LocationLookup) ─┘
 ## Error Handling and Resilience
 
 ### Agent Failure Cascade
+
 ```
 IF ProductSearchAgent fails:
   └─→ Try fallback search
@@ -745,6 +763,7 @@ IF NavigationAgent fails:
 ```
 
 ### Retry Strategy
+
 ```csharp
 // Each service call has retry policy
 var response = await Policy
@@ -801,4 +820,4 @@ telemetryClient.TrackMetric("AgentExecutionTime", executionTime,
 **Version**: 2.0  
 **Date**: December 2024  
 **Authors**: Bruno Capuano, Kinfey Lo  
-**Session**: Microsoft AI Tour 2026 - BRK445
+**PoC**: Contoso Agents PoC — Zava branch

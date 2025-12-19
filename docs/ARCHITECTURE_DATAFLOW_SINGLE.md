@@ -130,6 +130,7 @@ sequenceDiagram
 ### Detailed Step-by-Step Flow
 
 #### Step 1: Request Initiation
+
 ```
 User → Store Frontend
 - User uploads photo
@@ -138,6 +139,7 @@ User → Store Frontend
 ```
 
 #### Step 2: Agent Creation
+
 ```csharp
 // SingleAgentDemo creates local agent
 var chatClient = serviceProvider.GetRequiredService<IChatClient>();
@@ -145,6 +147,7 @@ var agent = new LocalAgent(chatClient, agentConfiguration);
 ```
 
 #### Step 3: Photo Analysis
+
 ```
 Agent → AnalyzePhotoService
 - POST /api/photoanalysis/local/analyze
@@ -162,6 +165,7 @@ Response: {
 ```
 
 #### Step 4: Customer Information Retrieval
+
 ```
 Agent → CustomerInformationService
 - POST /api/customer/local/getinfo
@@ -179,6 +183,7 @@ Response: {
 ```
 
 #### Step 5: Tool Reasoning
+
 ```
 Agent → ToolReasoningService
 - POST /api/reasoning/local/analyze
@@ -195,6 +200,7 @@ Response: {
 ```
 
 #### Step 6: Inventory Search
+
 ```
 Agent → InventoryService
 - POST /api/inventory/local/search
@@ -214,6 +220,7 @@ Response: {
 ```
 
 #### Step 7: Matchmaking
+
 ```
 Agent → MatchmakingService
 - POST /api/matchmaking/local/match
@@ -244,6 +251,7 @@ Response: {
 ```
 
 #### Step 8: Response Aggregation
+
 ```csharp
 // Agent synthesizes final response
 var response = new {
@@ -259,6 +267,7 @@ return response;
 ### Data Format Examples
 
 **Request to SingleAgentDemo**:
+
 ```json
 {
   "imageUrl": "https://storage/photo.jpg",
@@ -268,6 +277,7 @@ return response;
 ```
 
 **Response from SingleAgentDemo**:
+
 ```json
 {
   "recommendations": [
@@ -534,18 +544,21 @@ public IActionResult AnalyzeDirectCall()
 ## Performance Characteristics
 
 ### MAF Local Mode
+
 - **Latency**: 2-5 seconds typical
 - **Dependencies**: Azure OpenAI, SQL Database
 - **Scalability**: Limited by OpenAI rate limits
 - **Cost**: Per-token pricing for chat and embeddings
 
 ### MAF Foundry Mode
+
 - **Latency**: 3-6 seconds typical (includes Foundry overhead)
 - **Dependencies**: Microsoft Foundry, SQL Database
 - **Scalability**: Managed by Microsoft Foundry
 - **Cost**: Microsoft Foundry agent execution + token costs
 
 ### Direct Call Mode
+
 - **Latency**: < 100ms (no AI processing)
 - **Dependencies**: None (self-contained)
 - **Scalability**: Very high (simple HTTP responses)
@@ -554,6 +567,7 @@ public IActionResult AnalyzeDirectCall()
 ## Error Handling
 
 ### Retry Logic
+
 ```csharp
 // Services use HttpClient with retry policy
 builder.Services.AddHttpClient<InventoryService>()
@@ -561,6 +575,7 @@ builder.Services.AddHttpClient<InventoryService>()
 ```
 
 ### Fallback Strategy
+
 ```
 Try MAF Foundry
   ↓ (on error)
@@ -572,6 +587,7 @@ Return response (possibly degraded)
 ```
 
 ### Error Response Format
+
 ```json
 {
   "error": "Service temporarily unavailable",
@@ -587,12 +603,14 @@ Return response (possibly degraded)
 ### Application Insights Traces
 
 Each request generates traces showing:
+
 - Request duration for each service call
 - Dependency calls and their latencies
 - Success/failure rates
 - Custom agent metrics
 
 ### Example Trace
+
 ```
 Request: POST /api/singleagent/local/analyze
   ├─ Dependency: POST /api/photoanalysis/local/analyze (542ms)
@@ -614,4 +632,4 @@ Total: 2760ms
 **Version**: 2.0  
 **Date**: December 2024  
 **Authors**: Bruno Capuano, Kinfey Lo  
-**Session**: Microsoft AI Tour 2026 - BRK445
+**PoC**: Contoso Agents PoC — Zava branch

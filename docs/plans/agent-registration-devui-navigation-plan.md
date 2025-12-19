@@ -8,7 +8,7 @@
 
 ## Overview
 
-This plan outlines the implementation of three major improvements to the AI Tour demo application:
+This plan outlines the implementation of three major improvements to the Contoso Agents PoC (Zava branch) demo application:
 
 1. **Refactor agent registration** using extension methods for cleaner dependency injection
 2. **Integrate DevUI** for enhanced debugging and visualization capabilities

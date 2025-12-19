@@ -25,17 +25,20 @@ The BRK445 solution supports two deployment models:
 #### Required Software
 
 1. **.NET 9 SDK**
+
    ```bash
    # Download from: https://dotnet.microsoft.com/download/dotnet/9.0
    dotnet --version  # Should show 9.0 or higher
    ```
 
 2. **.NET Aspire Workload**
+
    ```bash
    dotnet workload install aspire
    ```
 
 3. **Docker Desktop**
+
    ```bash
    # Download from: https://www.docker.com/products/docker-desktop
    docker --version  # Verify installation
@@ -48,6 +51,7 @@ The BRK445 solution supports two deployment models:
 Create `appsettings.Development.json` files in each service:
 
 **Example for `src/DataService/appsettings.Development.json`**:
+
 ```json
 {
   "ConnectionStrings": {
@@ -75,6 +79,7 @@ dotnet build
 ```
 
 **Expected Output**:
+
 ```
 Build succeeded.
     0 Warning(s)
@@ -104,17 +109,20 @@ Repeat for: `SingleAgentDemo`, `MultiAgentDemo`, and all 8 agent services.
 ```
 
 **On Windows**:
+
 ```powershell
 .\run-aspire.ps1
 ```
 
 **What Happens**:
+
 1. Docker containers start (SQL Server)
 2. All 10+ microservices launch
-3. Aspire Dashboard opens automatically (usually http://localhost:18888)
+3. Aspire Dashboard opens automatically (usually <http://localhost:18888>)
 4. Services register and become healthy
 
 **Aspire Dashboard Features**:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │         .NET Aspire Dashboard                    │
@@ -162,6 +170,7 @@ MultiAgentDemo: http://localhost:[port]
    - Upload a test photo
 
 3. **Test Agent Services**:
+
    ```bash
    # Check health endpoints
    curl http://localhost:[dataservice-port]/health
@@ -176,6 +185,7 @@ MultiAgentDemo: http://localhost:[port]
 ```
 
 **On Windows**:
+
 ```powershell
 .\cleanup-aspire.ps1
 ```
@@ -290,6 +300,7 @@ graph TB
 #### Required Tools
 
 1. **Azure CLI**
+
    ```bash
    # Install from: https://docs.microsoft.com/cli/azure/install-azure-cli
    az --version  # Verify installation
@@ -299,6 +310,7 @@ graph TB
    ```
 
 2. **Python 3.9+**
+
    ```bash
    python --version  # Should be 3.9 or higher
    ```
@@ -472,6 +484,7 @@ az monitor app-insights component show \
    - **8x Agent Services**: Individual agent microservices
 
 4. Configure environment variables for each:
+
    ```
    ConnectionStrings__productsDb = [SQL connection string]
    ConnectionStrings__microsoftfoundrycnnstring = [Foundry connection]
@@ -537,6 +550,7 @@ curl -X GET https://your-dataservice-url.azurecontainerapps.io/data/initialize
 For each Container App, configure:
 
 1. **Scaling Rules**:
+
    ```bash
    az containerapp update \
      --name store \
@@ -546,6 +560,7 @@ For each Container App, configure:
    ```
 
 2. **Health Probes**:
+
    ```bash
    az containerapp update \
      --name store \
@@ -554,6 +569,7 @@ For each Container App, configure:
    ```
 
 3. **Custom Domains** (optional):
+
    ```bash
    az containerapp hostname bind \
      --name store \
@@ -588,6 +604,7 @@ az resource list \
 ```
 
 **Expected Output**:
+
 ```
 Name                          Type
 ----------------------------  -----------------------------------------
@@ -767,6 +784,7 @@ az sql db delete \
 **Symptoms**: DataService cannot connect to SQL
 
 **Solution**:
+
 ```bash
 # Add your IP to SQL firewall
 az sql server firewall-rule create \
@@ -782,6 +800,7 @@ az sql server firewall-rule create \
 **Symptoms**: Container app shows "Provisioning" forever
 
 **Solution**:
+
 ```bash
 # Check logs
 az containerapp logs show \
@@ -800,6 +819,7 @@ az containerapp revision list \
 **Symptoms**: 429 errors from Microsoft Foundry
 
 **Solution**:
+
 - Increase deployment SKU capacity
 - Implement retry logic with exponential backoff
 - Consider request batching
@@ -809,6 +829,7 @@ az containerapp revision list \
 **Symptoms**: Unexpected Azure bill
 
 **Solution**:
+
 ```bash
 # Set daily cap
 az monitor app-insights component update \
@@ -835,4 +856,4 @@ builder.Services.AddApplicationInsightsTelemetry(options => {
 **Version**: 2.0  
 **Date**: December 2024  
 **Authors**: Bruno Capuano, Kinfey Lo  
-**Session**: Microsoft AI Tour 2026 - BRK445
+**PoC**: Contoso Agents PoC — Zava branch

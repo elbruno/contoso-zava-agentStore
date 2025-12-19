@@ -14,24 +14,30 @@ BRK445 is an enterprise demonstration solution showcasing patterns and best prac
 ## Architectural Principles
 
 ### 1. Separation of Concerns
+
 - **Agents**: AI reasoning and decision-making logic
 - **Tools/Services**: Business functionality and data integration
 - **Orchestration**: Workflow coordination and service composition
 
 ### 2. Independent Microservices
+
 Each agent and service operates as an independent HTTP microservice, enabling:
+
 - Independent scalability
 - Isolated deployment
 - Per-service authentication and rate limiting boundaries
 - Enhanced resilience
 
 ### 3. Framework Flexibility
+
 The solution uses Microsoft Agent Framework (Microsoft.Agents.AI) for building and deploying AI agents:
+
 - **MAF Foundry**: Agents deployed in Microsoft Foundry (cloud)
 - **MAF Local**: Agents created locally with IChatClient
 - Runtime switching between modes via UI configuration
 
 ### 4. Local + Cloud Ready
+
 - **Local Development**: .NET Aspire for orchestration and testing
 - **Cloud Production**: Azure Container Apps with full telemetry
 
@@ -190,12 +196,14 @@ graph TB
 ### 1. Microservice Agent Pattern
 
 Each agent is an independent HTTP microservice with:
+
 - Its own configuration and dependencies
 - HTTP endpoints exposed
 - Independent registration in Aspire
 - Dedicated telemetry and logging
 
 **Benefits**:
+
 - Loose coupling
 - Independent scalability
 - Clear responsibility boundaries
@@ -215,6 +223,7 @@ Agent operating modes can be switched at runtime:
 The frontend routes to the appropriate mode based on user configuration stored in `localStorage`.
 
 **Benefits**:
+
 - Flexibility in agent execution
 - No recompilation needed
 - Easy comparison between modes
@@ -236,6 +245,7 @@ public IActionResult AnalyzePhotoDirectCall()
 ```
 
 **Benefits**:
+
 - System works even if AI fails
 - Testing without LLM costs
 - Offline development
@@ -250,6 +260,7 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 ```
 
 **Benefits**:
+
 - Type-safe APIs
 - Built-in retry logic
 - Consistent error handling
@@ -258,12 +269,14 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 ### 5. Dependency Injection Pattern
 
 All services use .NET DI for:
+
 - Agents (MAFFoundryAgentProvider, MAFLocalAgentProvider)
 - HTTP clients (IHttpClientFactory)
 - Configuration (IConfiguration)
 - Logging (ILogger)
 
 **Benefits**:
+
 - Testability
 - Loose coupling
 - Automatic lifetime management
@@ -272,18 +285,21 @@ All services use .NET DI for:
 ## Agent Operating Modes
 
 ### MAF Local Mode
+
 - Uses locally created agents with `IChatClient`
 - Direct connection to Azure OpenAI or OpenAI endpoints
 - Suitable for development and testing
 - No Microsoft Foundry project required
 
 ### MAF Foundry Mode
+
 - Uses agents deployed in Microsoft Foundry
 - Leverages enterprise agent management
 - Suitable for production deployments
 - Requires Microsoft Foundry project connection
 
 ### Direct Call Mode
+
 - Bypasses AI completely
 - Returns predefined mock responses
 - Useful for:
@@ -310,6 +326,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = 
 ```
 
 **Key Points**:
+
 - Single unified resource (not hub/project with managed resource groups)
 - All deployments in the same resource group
 - Connection string key: `microsoftfoundryproject` in `appsettings.json`
@@ -336,6 +353,7 @@ builder.Services.AddSingleton<AIAgent>(sp => {
 All services send telemetry to Application Insights:
 
 **Metrics Captured**:
+
 - HTTP request response times
 - Error rates and exceptions
 - Dependency calls (SQL, HTTP, OpenAI)
@@ -343,6 +361,7 @@ All services send telemetry to Application Insights:
 - Custom agent metrics
 
 **Configuration**:
+
 ```csharp
 builder.AddServiceDefaults(); // Includes Application Insights
 ```
@@ -370,6 +389,7 @@ logger.LogInformation(
 ```
 
 **Log Levels**:
+
 - `Information`: Normal operations
 - `Warning`: Recoverable situations
 - `Error`: Errors requiring attention
@@ -380,10 +400,12 @@ logger.LogInformation(
 ### Authentication and Authorization
 
 **Current State**:
+
 - Services do not implement authentication (demo purposes)
 - Configured with `app.UseAuthorization()` ready for extension
 
 **Production Recommendations**:
+
 - Implement Azure AD B2C for user authentication
 - API keys or OAuth 2.0 for service-to-service
 - Managed Identity for Azure resource access
@@ -392,10 +414,12 @@ logger.LogInformation(
 ### Secrets Management
 
 **Development**:
+
 - Secrets in `appsettings.Development.json` (not committed)
 - User Secrets for local development: `dotnet user-secrets`
 
 **Production**:
+
 - Azure Key Vault for all secrets
 - Managed Identity for passwordless access
 - Connection strings via environment variables
@@ -403,6 +427,7 @@ logger.LogInformation(
 ### Input Validation
 
 All endpoints validate inputs:
+
 ```csharp
 [HttpPost("analyze")]
 public async Task<IActionResult> Analyze([FromBody] AnalyzeRequest request)
@@ -417,11 +442,13 @@ public async Task<IActionResult> Analyze([FromBody] AnalyzeRequest request)
 ### Network Security
 
 **Azure**:
+
 - SQL firewall configured to allow only Azure services
 - TLS 1.2 minimum on all communications
 - Application Insights with controlled public network access
 
 **Local**:
+
 - Services exposed only on localhost
 - HTTPS enforcement in production
 
@@ -448,12 +475,14 @@ public async Task<IActionResult> Analyze([FromBody] AnalyzeRequest request)
 ### Performance Considerations
 
 **Optimizations Implemented**:
+
 - Async/await for all I/O operations
 - Streaming responses when possible
 - Lazy loading of dependencies
 - Minimized serialization/deserialization
 
 **Monitoring**:
+
 - Application Insights for bottleneck identification
 - Latency metrics per service
 - SQL Server query performance
@@ -517,6 +546,7 @@ dotnet test --filter "FullyQualifiedName~DataService"
 ### File I/O
 
 Always use UTF-8 encoding:
+
 ```csharp
 File.WriteAllText(path, content, Encoding.UTF8);
 ```
@@ -550,12 +580,14 @@ public record AiPhotoAnalysisResult(
 **Context**: Azure offers two ways to deploy AI resources.
 
 **Reason**:
+
 - AI Services creates resources in the same resource group
 - ML Workspaces creates managed resource groups
 - AI Services is simpler for demos
 - All resources visible in one place
 
 **Consequences**:
+
 - Cleaner and more predictable deployment
 - Easier billing tracking
 - Less management overhead
@@ -567,12 +599,14 @@ public record AiPhotoAnalysisResult(
 **Context**: The solution must demonstrate multiple operating modes.
 
 **Reason**:
+
 - Easy comparison without recompilation
 - Better demo experience
 - No vendor lock-in
 - Smooth migration path for customers
 
 **Consequences**:
+
 - Code for all three modes in each service
 - More complexity in frontend routing
 - Benefit: maximum flexibility
@@ -584,12 +618,14 @@ public record AiPhotoAnalysisResult(
 **Context**: Agents could be classes in a monolith or separate services.
 
 **Reason**:
+
 - Independent scalability
 - Clear responsibility boundaries
 - Independent deployment
 - Better for demos (shows real architecture)
 
 **Consequences**:
+
 - Greater operational complexity
 - Network overhead between services
 - Benefit: production-ready architecture
@@ -601,12 +637,14 @@ public record AiPhotoAnalysisResult(
 **Context**: Demos need to work without AI credentials.
 
 **Reason**:
+
 - Testing without LLM costs
 - Offline development
 - Fallback when AI fails
 - Useful for CI/CD pipelines
 
 **Consequences**:
+
 - Additional code to maintain
 - Mock responses to manage
 - Benefit: resilience and flexibility
@@ -679,4 +717,4 @@ curl http://localhost:[port]/health/log
 **Version**: 2.0  
 **Date**: December 2024  
 **Authors**: Bruno Capuano, Kinfey Lo  
-**Session**: Microsoft AI Tour 2026 - BRK445
+**PoC**: Contoso Agents PoC — Zava branch

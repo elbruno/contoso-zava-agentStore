@@ -1,24 +1,21 @@
-# Microsoft AI Tour 2026 — BRK445
+# Contoso Agents PoC — Zava branch
 
-![AI Tour banner](img/Banner-MS-AI-Tour-26.png)
+![Contoso Agents PoC banner](img/Banner-MS-AI-Tour-26.png)
 
-[![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/Pwpvf3TWaw)](https://aka.ms/MicrosoftFoundryDiscord-AITour26)
-[![Microsoft Foundry Developer Forum](https://img.shields.io/badge/GitHub-Microsoft_Foundry_Developer_Forum-blue?style=for-the-badge&logo=github&color=adff2f&logoColor=fff)](https://aka.ms/MicrosoftFoundryForum-AITour26)
+Contoso Agents PoC: Building enterprise-ready agents with Microsoft Foundry (Zava branch)
 
-Microsoft Foundry Agent Service: Building enterprise-ready AI Agents with Microsoft Foundry
+This repository contains the sample code, services, and materials for a Contoso proof-of-concept (PoC) that demonstrates agent design and deployment patterns using Microsoft Foundry. The solution demonstrates patterns for designing, implementing, and deploying multi-service agents with governance, reuse, and responsible-AI considerations. Zava is included as one of the agent branches showcased in this PoC.
 
-This repository contains the sample code, services, and materials used in BRK445: "Building enterprise-ready AI Agents with Microsoft Foundry" presented at Microsoft AI Tour 2026. The solution demonstrates patterns for designing, implementing, and deploying multi-service AI agents with governance, reuse, and responsible-AI considerations.
-
-If you are delivering this session, check the `session-delivery-resources/` folder for slides, scripts, and demos.
+If you are evaluating or delivering this PoC, check the `session-delivery-resources/` folder for slides, scripts, and demos.
 
 ## Quick links
 
 - Source code: `src/`
-- Session delivery resources: `session-delivery-resources/`
+- PoC resources: `session-delivery-resources/`
 
 ## What you'll learn
 
-In this session you will learn practical techniques to:
+In this PoC you will learn practical techniques to:
 
 - Design agent architectures that separate reasoning, tools, and orchestration
 - Integrate Microsoft Foundry (Azure AI Studio) services with local microservices
@@ -85,9 +82,9 @@ Both frameworks can connect to the same Microsoft Foundry agents. You can switch
 
 See [`src/readme.md`](./src/readme.md) for more details on the framework architecture.
 
-## 🔗 Session Resources
+## 🔗 PoC Resources
 
-Check the [Session Delivery Resources folder](./session-delivery-resources/) for the whole set of materials.
+Check the [PoC resources folder](./session-delivery-resources/) for the whole set of materials.
 
 | Resource | Path |
 |---|---:|

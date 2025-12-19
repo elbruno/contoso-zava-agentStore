@@ -1,8 +1,8 @@
-# BRK445 Component Architecture
+# Contoso Agents PoC Component Architecture (Zava branch)
 
 ## Overview
 
-This document provides detailed descriptions of all components in the BRK445 solution, organized by architectural layer.
+This document provides detailed descriptions of all components in the Contoso Agents PoC (Zava branch), organized by architectural layer.
 
 ## Related Documentation
 
@@ -22,6 +22,7 @@ This document provides detailed descriptions of all components in the BRK445 sol
 **Location**: `src/Store/`
 
 **Responsibilities**:
+
 - Interactive user interface for retail experience
 - Shopping cart management
 - Agent mode configuration
@@ -29,12 +30,14 @@ This document provides detailed descriptions of all components in the BRK445 sol
 - DevUI for agent debugging (development only)
 
 **Key Features**:
+
 - Agent mode preference stored in browser `localStorage`
 - Dynamic routing to MAF Local, MAF Foundry, or Direct Call modes
 - Integration with Microsoft.Agents.AI DevUI for debugging
 - Blazor Bootstrap for UI components
 
 **Configuration**:
+
 ```csharp
 // Program.cs
 builder.Services.AddHttpClient<SingleAgentService>(
@@ -97,12 +100,14 @@ graph TB
 **Pattern**: Single agent with reasoning loop
 
 **Responsibilities**:
+
 - Orchestrate single-agent workflow
 - Coordinate tool calls across agent services
 - Provide MAF Local and MAF Foundry modes
 - Return structured recommendations
 
 **Workflow**:
+
 1. Analyze customer photo
 2. Retrieve customer information
 3. Determine appropriate tools via reasoning
@@ -110,6 +115,7 @@ graph TB
 5. Return personalized recommendations
 
 **Endpoints**:
+
 ```
 /api/singleagent/local/*       → MAF Local mode
 /api/singleagent/foundry/*     → MAF Foundry mode
@@ -117,6 +123,7 @@ graph TB
 ```
 
 **Configuration**:
+
 ```csharp
 // Register MAF Foundry agents
 builder.AddMAFFoundryAgents(microsoftFoundryProjectConnection);
@@ -130,6 +137,7 @@ builder.Services.AddHttpClient<ToolReasoningService>(
 ```
 
 **Use Cases**:
+
 - Workflow-oriented tasks where one agent can reason through multiple steps
 - Tasks requiring tool selection and sequential execution
 - Personalized product recommendations
@@ -143,17 +151,20 @@ builder.Services.AddHttpClient<ToolReasoningService>(
 **Pattern**: Multiple specialized agents coordinated sequentially
 
 **Responsibilities**:
+
 - Orchestrate multi-agent collaboration
 - Execute agents in sequence
 - Aggregate results from specialized agents
 - Provide comprehensive responses
 
 **Workflow**:
+
 1. Product Search Agent → Find candidate products
 2. Matchmaking Agent → Evaluate matches with customer preferences
 3. Navigation Agent → Generate in-store route instructions
 
 **Endpoints**:
+
 ```
 /api/multiagent/local/*       → MAF Local mode
 /api/multiagent/foundry/*     → MAF Foundry mode
@@ -161,6 +172,7 @@ builder.Services.AddHttpClient<ToolReasoningService>(
 ```
 
 **Configuration**:
+
 ```csharp
 // Register MAF agents
 builder.AddMAFFoundryAgents(microsoftFoundryProjectConnection);
@@ -176,6 +188,7 @@ builder.Services.AddScoped<NavigationOrchestrator>();
 ```
 
 **Use Cases**:
+
 - Complex domain-specific tasks requiring specialized agents
 - Multi-step processes with clear stage boundaries
 - Tasks benefiting from agent specialization
@@ -205,6 +218,7 @@ All agent services implement:
 3. **Direct Call Mode**: Returns mock responses without AI
 
 **Standard Configuration**:
+
 ```csharp
 // Program.cs pattern for all agent services
 var builder = WebApplication.CreateBuilder(args);
@@ -232,16 +246,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/AnalyzePhotoService/`
 
 **Tools Provided**:
+
 - Image analysis using Azure Computer Vision
 - Customer preference detection
 - Visual feature extraction
 
 **Endpoints**:
+
 - `POST /api/photoanalysis/local/analyze` - MAF Local mode
 - `POST /api/photoanalysis/foundry/analyze` - MAF Foundry mode
 - `POST /api/photoanalysis/analyzedirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - Azure OpenAI Client
 - DataService
@@ -253,16 +270,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/CustomerInformationService/`
 
 **Tools Provided**:
+
 - Customer profile retrieval
 - Purchase history access
 - Preference management
 
 **Endpoints**:
+
 - `POST /api/customer/local/getinfo` - MAF Local mode
 - `POST /api/customer/foundry/getinfo` - MAF Foundry mode
 - `POST /api/customer/getinfodirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 - SQL Database
@@ -274,16 +294,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/ToolReasoningService/`
 
 **Tools Provided**:
+
 - Tool selection reasoning
 - Context analysis
 - Capability matching
 
 **Endpoints**:
+
 - `POST /api/reasoning/local/analyze` - MAF Local mode
 - `POST /api/reasoning/foundry/analyze` - MAF Foundry mode
 - `POST /api/reasoning/analyzedirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 
@@ -294,16 +317,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/InventoryService/`
 
 **Tools Provided**:
+
 - Product availability checking
 - Inventory filtering
 - Stock level queries
 
 **Endpoints**:
+
 - `POST /api/inventory/local/search` - MAF Local mode
 - `POST /api/inventory/foundry/search` - MAF Foundry mode
 - `POST /api/inventory/searchdirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 - SQL Database
@@ -315,16 +341,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/MatchmakingService/`
 
 **Tools Provided**:
+
 - Similarity scoring
 - Preference matching
 - Product ranking
 
 **Endpoints**:
+
 - `POST /api/matchmaking/local/match` - MAF Local mode
 - `POST /api/matchmaking/foundry/match` - MAF Foundry mode
 - `POST /api/matchmaking/matchdirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 - Vector search capabilities
@@ -336,16 +365,19 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/LocationService/`
 
 **Tools Provided**:
+
 - Store zone mapping
 - Aisle location lookup
 - Product placement information
 
 **Endpoints**:
+
 - `POST /api/location/local/find` - MAF Local mode
 - `POST /api/location/foundry/find` - MAF Foundry mode
 - `POST /api/location/finddirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 
@@ -356,21 +388,25 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Location**: `src/NavigationService/`
 
 **Tools Provided**:
+
 - Pathfinding algorithms
 - Turn-by-turn directions
 - Landmark identification
 
 **Endpoints**:
+
 - `POST /api/navigation/local/route` - MAF Local mode
 - `POST /api/navigation/foundry/route` - MAF Foundry mode
 - `POST /api/navigation/routedirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 - LocationService
 
 **Data Models**:
+
 ```csharp
 public record NavigationInstructions(
     NavigationStep[] Steps,
@@ -391,16 +427,19 @@ public record NavigationStep(
 **Location**: `src/ProductSearchService/`
 
 **Tools Provided**:
+
 - Vector similarity search
 - Semantic query understanding
 - Product ranking by relevance
 
 **Endpoints**:
+
 - `POST /api/productsearch/local/search` - MAF Local mode
 - `POST /api/productsearch/foundry/search` - MAF Foundry mode
 - `POST /api/productsearch/searchdirectcall` - Direct call mode
 
 **Dependencies**:
+
 - Microsoft.Agents.AI
 - DataService
 - Embedding generation
@@ -417,18 +456,21 @@ public record NavigationStep(
 **Location**: `src/DataService/`
 
 **Responsibilities**:
+
 - SQL Server database access
 - Product catalog management
 - Semantic search with embeddings
 - Vector memory for similarity
 
 **Key Features**:
+
 - Automatic database initialization with seed data
 - Embedding generation using Azure OpenAI
 - Vector search for semantic recommendations
 - RESTful endpoints for CRUD operations
 
 **Database Schema**:
+
 ```
 Products Table:
 - Id (int, PK)
@@ -450,6 +492,7 @@ Customers Table:
 ```
 
 **Endpoints**:
+
 ```
 GET  /products              - List all products
 GET  /products/{id}         - Get product by ID
@@ -459,6 +502,7 @@ GET  /data/initialize       - Initialize/reset database
 ```
 
 **Configuration**:
+
 ```csharp
 // Database context
 builder.AddSqlServerDbContext<Context>("productsDb");
@@ -472,6 +516,7 @@ builder.Services.AddSingleton<MemoryContext>();
 ```
 
 **Vector Search Flow**:
+
 ```
 Query Text
     ↓
@@ -503,12 +548,14 @@ graph LR
 **Resource Type**: `Microsoft.CognitiveServices/accounts` (kind: 'AIServices')
 
 **Purpose**:
+
 - Host deployed AI agents
 - Provide chat models (gpt-5-mini)
 - Provide embedding models (text-embedding-3-small)
 - Centralized AI capabilities
 
 **Configuration**:
+
 ```json
 {
   "ConnectionStrings": {
@@ -525,12 +572,14 @@ graph LR
 **SKU**: Basic tier (5 DTU)
 
 **Purpose**:
+
 - Store product catalog
 - Manage customer data
 - Vector storage for embeddings
 - Relational data queries
 
 **Features**:
+
 - Automatic initialization via Entity Framework migrations
 - Seed data for demo scenarios
 - Firewall rule to allow Azure services
@@ -540,12 +589,14 @@ graph LR
 **Resource Type**: `Microsoft.Insights/components`
 
 **Purpose**:
+
 - Application telemetry
 - Performance monitoring
 - Error tracking
 - Distributed tracing
 
 **Collected Metrics**:
+
 - Request/response times
 - Dependency call durations
 - Exception rates
@@ -558,6 +609,7 @@ graph LR
 **SKU**: Standard_LRS
 
 **Purpose**:
+
 - Blob storage for images
 - File storage for assets
 - Queue storage for async processing (future)
@@ -654,6 +706,7 @@ graph TD
 **Location**: `src/ZavaAgentsMetadata/`
 
 **Usage**:
+
 ```csharp
 var agentId = AgentMetadata.GetAgentName(AgentType.NavigationAgent);
 ```
@@ -665,6 +718,7 @@ var agentId = AgentMetadata.GetAgentName(AgentType.NavigationAgent);
 **Location**: `src/ZavaMAFFoundry/`
 
 **Extension Method**:
+
 ```csharp
 builder.AddMAFFoundryAgents(connectionString);
 ```
@@ -676,6 +730,7 @@ builder.AddMAFFoundryAgents(connectionString);
 **Location**: `src/ZavaMAFLocal/`
 
 **Extension Method**:
+
 ```csharp
 builder.AddMAFLocalAgents();
 ```
@@ -687,6 +742,7 @@ builder.AddMAFLocalAgents();
 **Location**: `src/ZavaDatabaseInitialization/`
 
 **Classes**:
+
 - `Context`: Entity Framework DbContext
 - `DbInitializer`: Database initialization logic
 
@@ -697,6 +753,7 @@ builder.AddMAFLocalAgents();
 **Location**: `src/ZavaServiceDefaults/`
 
 **Extension Method**:
+
 ```csharp
 builder.AddServiceDefaults(); // Adds telemetry, health checks, etc.
 ```
@@ -708,6 +765,7 @@ builder.AddServiceDefaults(); // Adds telemetry, health checks, etc.
 **Location**: `src/SharedEntities/`
 
 **Models**:
+
 - `Location`: Store location (Zone, Aisle)
 - `NavigationStep`: Navigation instruction
 - `NavigationInstructions`: Complete route
@@ -719,6 +777,7 @@ builder.AddServiceDefaults(); // Adds telemetry, health checks, etc.
 **Location**: `src/DataServiceClient/`
 
 **Extension Method**:
+
 ```csharp
 builder.Services.AddDataServiceClient("https+http://dataservice");
 ```
@@ -735,4 +794,4 @@ builder.Services.AddDataServiceClient("https+http://dataservice");
 **Version**: 2.0  
 **Date**: December 2024  
 **Authors**: Bruno Capuano, Kinfey Lo  
-**Session**: Microsoft AI Tour 2026 - BRK445
+**PoC**: Contoso Agents PoC — Zava branch
